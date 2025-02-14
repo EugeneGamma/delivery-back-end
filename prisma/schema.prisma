@@ -24,50 +24,52 @@ enum UserRole {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  email        String      @unique
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
   name         String
   passwordHash String
-  role         UserRole    @default(CUSTOMER)
-  orders       Order[]     @relation("UserOrders")
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  role         UserRole @default(CUSTOMER)
+  orders       Order[]  @relation("UserOrders")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Cart         Cart?
 }
 
 model Order {
-  id          Int         @id @default(autoincrement())
-  items       Json
-  total       Float
-  status      OrderStatus @default(PENDING)
-  userId      Int
-  user        User        @relation("UserOrders", fields: [userId], references: [id])
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-}
-
-model Dish {
-  id            Int      @id @default(autoincrement())
-  name          String
-  description   String
-  ingredients   Json      // Используем тип Json вместо String[]
-  price         Int
-  imageUrl      String?
-  category      String
-  isAvailable   Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id])
-  restaurantId  Int?
-}
-model Restaurant {
   id        Int         @id @default(autoincrement())
-  name      String
-  dishes    Dish[]
-  menuItems MenuItem[]  // Добавляем связь с MenuItem
+  items     Json
+  total     Float
+  status    OrderStatus @default(PENDING)
+  userId    Int
+  user      User        @relation("UserOrders", fields: [userId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
 
+model Dish {
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String
+  ingredients  Json // Используем тип Json вместо String[]
+  price        Int
+  imageUrl     String?
+  category     String
+  isAvailable  Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId Int?
+  CartItem     CartItem[]
+}
+
+model Restaurant {
+  id        Int        @id @default(autoincrement())
+  name      String
+  dishes    Dish[]
+  menuItems MenuItem[] // Добавляем связь с MenuItem
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
 
 model MenuItem {
   id           Int        @id @default(autoincrement())
@@ -75,4 +77,25 @@ model MenuItem {
   price        Float
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId Int
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  dishId    Int
+  dish      Dish     @relation(fields: [dishId], references: [id])
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, dishId])
 }
