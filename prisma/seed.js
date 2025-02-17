@@ -47,7 +47,7 @@ async function main() {
                 description: faker.lorem.sentence(),
                 ingredients: JSON.stringify([faker.commerce.product(), faker.commerce.product()]),
                 price: faker.number.int({ min: 5000, max: 50000 }),
-                imageUrl: `/uploads/seeded/dish (${i + 1}).jpg`,
+                imageUrl: `/uploads/seeded/dish_(${i + 1}).jpg`,
                 category: faker.commerce.department(),
             },
         });
