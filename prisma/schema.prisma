@@ -64,10 +64,12 @@ model Dish {
 model Restaurant {
   id        Int        @id @default(autoincrement())
   name      String
+  latitude  Float
+  longitude Float
   dishes    Dish[]
-  menuItems MenuItem[] // Добавляем связь с MenuItem
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  MenuItem  MenuItem[]
 }
 
 model MenuItem {

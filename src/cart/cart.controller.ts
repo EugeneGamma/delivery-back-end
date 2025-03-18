@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Delete, Param, UseGuards } from '@nestjs/common';
+// cart.controller.ts
+import { Controller, Get, Post, Body, Delete, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -16,21 +17,27 @@ export class CartController {
     @ApiOperation({ summary: 'Добавление товара в корзину' })
     @ApiResponse({ status: 201, description: 'Товар успешно добавлен в корзину.' })
     @ApiBody({ type: AddToCartDto })
-    addToCart(@GetUser('id') userId: number, @Body() dto: AddToCartDto) {
+    addToCart(
+        @GetUser('id', ParseIntPipe) userId: number,
+        @Body() dto: AddToCartDto
+    ) {
         return this.cartService.addToCart(userId, dto);
     }
 
     @Get()
     @ApiOperation({ summary: 'Получение содержимого корзины' })
     @ApiResponse({ status: 200, description: 'Корзина успешно получена.' })
-    getCart(@GetUser('id') userId: number) {
+    getCart(@GetUser('id', ParseIntPipe) userId: number) {
         return this.cartService.getCart(userId);
     }
 
     @Delete(':id')
     @ApiOperation({ summary: 'Удаление товара из корзины' })
     @ApiResponse({ status: 200, description: 'Товар успешно удален из корзины.' })
-    removeItem(@GetUser('id') userId: number, @Param('id') itemId: number) {
+    removeItem(
+        @GetUser('id') userId: number,
+        @Param('id', ParseIntPipe) itemId: number
+    ) {
         return this.cartService.removeItem(userId, itemId);
     }
 
