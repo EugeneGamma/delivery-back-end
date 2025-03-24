@@ -35,16 +35,22 @@ export class RestaurantsService {
     // Получение блюд ресторана с фильтрацией ТЕСТ ПИЗДЕЦ
     async getDishesByRestaurant(
         restaurantId: number,
-        filters: { category?: string; available?: boolean; sort?: 'asc' | 'desc' },
+        filters: { category?: string; available?: boolean | string; sort?: 'asc' | 'desc' },
     ) {
+        const isAvailable =
+            filters.available !== undefined
+                ? filters.available === true || filters.available === 'true'
+                : undefined;
+
         return this.prisma.dish.findMany({
             where: {
                 restaurantId,
                 category: filters.category ? filters.category : undefined,
-                isAvailable: filters.available !== undefined ? filters.available : undefined,
+                isAvailable,
             },
             orderBy: filters.sort ? { price: filters.sort } : undefined,
         });
     }
+
 
 }
