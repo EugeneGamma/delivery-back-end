@@ -62,11 +62,17 @@ model Dish {
 }
 
 model Restaurant {
-  id        Int        @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   name      String
-  latitude  Float
-  longitude Float
+  latitude  Float?
+  longitude Float?
   dishes    Dish[]
+
+  description  String? // Описание ресторана
+  imageUrl     String? // Основное изображение ресторана, его будешь выводить в главную
+  thumbnailUrl String? // Миниатюра, хз генерить или нет. Пока просто загружаем
+  topImageUrl  String? // Картинка для верхнего баннера, когда открываем ресторан
+
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   MenuItem  MenuItem[]

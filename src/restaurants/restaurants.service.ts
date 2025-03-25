@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import {CreateRestaurantDto} from "./dto/create-restaurant.dto";
+import {UpdateRestaurantDto} from "./dto/update-restaurant.dto";
 
 @Injectable()
 export class RestaurantsService {
@@ -49,6 +51,45 @@ export class RestaurantsService {
                 isAvailable,
             },
             orderBy: filters.sort ? { price: filters.sort } : undefined,
+        });
+    }
+    async searchRestaurants(search: string) {
+        return this.prisma.$queryRaw`
+    SELECT *
+    FROM Restaurant
+    WHERE LOWER(name) LIKE LOWER(${`%${search}%`});
+  `;
+    }
+
+    async createRestaurant(dto: CreateRestaurantDto) {
+
+        return this.prisma.restaurant.create({
+            data: {
+                name: dto.name,
+                description: dto.description,
+                imageUrl: dto.imageUrl,
+                thumbnailUrl: dto.thumbnailUrl,
+                topImageUrl: dto.topImageUrl,
+            },
+        });
+    }
+    async getDishesByCategory(category: string, sort?: 'asc' | 'desc') {
+        return this.prisma.dish.findMany({
+            where: { category },
+            orderBy: sort ? { price: sort } : undefined,
+        });
+    }
+
+    async updateRestaurant(id: number, dto: UpdateRestaurantDto) {
+        return this.prisma.restaurant.update({
+            where: { id },
+            data: {
+                name: dto.name,
+                description: dto.description,
+                imageUrl: dto.imageUrl,
+                thumbnailUrl: dto.thumbnailUrl,
+                topImageUrl: dto.topImageUrl,
+            },
         });
     }
 

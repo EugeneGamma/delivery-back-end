@@ -16,7 +16,8 @@ import { UpdateDishDto } from './dto/update-dish.dto';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import {Query} from "@nestjs/common";
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('dishes')
 @Controller('dishes')
@@ -97,5 +98,18 @@ export class DishesController {
     @ApiResponse({ status: 404, description: 'Блюдо не найдено.' })
     remove(@Param('id') id: string) {
         return this.dishesService.remove(+id);
+    }
+
+    @ApiOperation({ summary: 'Поиск блюд по ингредиентам (fuzzy search)' })
+    @ApiQuery({
+        name: 'ingredients',
+        type: String,
+        description: 'Список ингредиентов, разделённых пробелами. Например: "tomato картошка лук"',
+        example: "tomato картошка лук"
+    })
+    @ApiResponse({ status: 200, description: 'Список блюд, содержащих указанные ингредиенты.' })
+    @Get('search-by-ingredients')
+    searchByIngredients(@Query('ingredients') ingredients: string) {
+        return this.dishesService.searchDishesByIngredients(ingredients);
     }
 }
