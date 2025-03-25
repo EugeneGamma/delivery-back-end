@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Schaden - Kunde",
+    "latitude": 40.83744840064993,
+    "longitude": 69.58820021378118,
+    "imageUrl": "/uploads/testing/restaurant_1_main.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.83744840064993,69.58820021378118"
+  },
+  {
+    "name": "Kuvalis, Dach and Gottlieb",
+    "latitude": 40.837535095658104,
+    "longitude": 69.60536462601557,
+    "imageUrl": "/uploads/testing/restaurant_2_main.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.837535095658104,69.60536462601557"
+  },
+  {
+    "name": "Greenholt, Veum and Stehr",
+    "latitude": 40.846542859038415,
+    "longitude": 69.61338591421212,
+    "imageUrl": "/uploads/testing/restaurant_3_main.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.846542859038415,69.61338591421212"
+  },
+  {
+    "name": "Konopelski - Stoltenberg",
+    "latitude": 40.83070493373173,
+    "longitude": 69.60847752737159,
+    "imageUrl": "/uploads/testing/restaurant_4_main.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.83070493373173,69.60847752737159"
+  },
+  {
+    "name": "Roob, Pfannerstill and Pollich",
+    "latitude": 40.8341730203523,
+    "longitude": 69.5891078223248,
+    "imageUrl": "/uploads/testing/restaurant_5_main.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.8341730203523,69.5891078223248"
+  }
+]
