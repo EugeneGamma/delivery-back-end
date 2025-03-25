@@ -7,6 +7,20 @@ import { generateRestaurantImages } from "./image_seed.js";
 
 const prisma = new PrismaClient();
 
+
+function getRandomCoordinates() {
+    const minLat = 40.8300;
+    const maxLat = 40.8500;
+    const minLng = 69.5800;
+    const maxLng = 69.6200;
+
+    const latitude = Math.random() * (maxLat - minLat) + minLat;
+    const longitude = Math.random() * (maxLng - minLng) + minLng;
+
+    return [latitude, longitude];
+}
+
+
 async function main() {
     console.log("🧹 Очищаем базу...");
     await prisma.cartItem.deleteMany();
@@ -90,8 +104,9 @@ async function main() {
     // Генерируем 5 ресторанов
     for (let i = 1; i <= 5; i++) {
         const restaurantName = faker.company.name();
-        const latitude = parseFloat(faker.location.latitude());
-        const longitude = parseFloat(faker.location.longitude());
+        const [latitude, longitude] = getRandomCoordinates();
+        // const latitude = getRandomCoordinates()[0];
+        // const longitude = getRandomCoordinates()[1];
 
         // Генерация изображений для ресторана
         const imagePaths = generateRestaurantImages(restaurantName, i, testingDir);
@@ -106,10 +121,24 @@ async function main() {
                 imageUrl: mainImageUrl,
             },
         });
-        restaurants.push(restaurantRecord);
-    }
 
+        // Формируем данные для записи в файл
+        const restaurantData = {
+            name: restaurantName,
+            latitude,
+            longitude,
+            imageUrl: mainImageUrl,
+            mapUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
+        };
+
+        restaurants.push(restaurantData);
+    }
+    console.log("💾 Сохранение ресторанов в restaurants.json...");
+    fs.writeFileSync("restaurants.json", JSON.stringify(restaurants, null, 2));
+    console.log("✅ Рестораны успешно сохранены!");
     console.log("🍽️ Генерация блюд для ресторанов...");
+
+
     const dishes = [];
     const possibleIngredients = [
         "tomato",
