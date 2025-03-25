@@ -2,6 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 import fs from "fs";
+import path from "path";
+import { generateRestaurantImages } from "./image_seed.js";
 
 const prisma = new PrismaClient();
 
@@ -21,7 +23,7 @@ async function main() {
     // Пользователь-админ
     const adminPassword = "admin123";
     const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
-    const adminUser = await prisma.user.create({
+    await prisma.user.create({
         data: {
             email: "admin@example.com",
             name: "Admin User",
@@ -34,7 +36,7 @@ async function main() {
     // Пользователь-менеджер
     const managerPassword = "manager123";
     const managerPasswordHash = await bcrypt.hash(managerPassword, 10);
-    const managerUser = await prisma.user.create({
+    await prisma.user.create({
         data: {
             email: "manager@example.com",
             name: "Manager User",
@@ -47,7 +49,7 @@ async function main() {
     // Пользователь-курьер
     const courierPassword = "courier123";
     const courierPasswordHash = await bcrypt.hash(courierPassword, 10);
-    const courierUser = await prisma.user.create({
+    await prisma.user.create({
         data: {
             email: "courier@example.com",
             name: "Courier User",
@@ -77,16 +79,37 @@ async function main() {
     console.log("💾 Сохранение тестовых пользователей в test-users.json...");
     fs.writeFileSync("test-users.json", JSON.stringify(testUsers, null, 2));
 
-    console.log("🏠 Генерация ресторана...");
-    const restaurant = await prisma.restaurant.create({
-        data: {
-            name: faker.company.name(),
-            latitude: parseFloat(faker.location.latitude()),
-            longitude: parseFloat(faker.location.longitude()),
-        },
-    });
+    // Папка для изображений ресторанов
+    const testingDir = path.join("uploads", "testing");
+    if (!fs.existsSync(testingDir)) {
+        fs.mkdirSync(testingDir, { recursive: true });
+    }
 
-    console.log("🍽️ Генерация блюд...");
+    console.log("🏠 Генерация ресторанов и изображений...");
+    const restaurants = [];
+    // Генерируем 5 ресторанов
+    for (let i = 1; i <= 5; i++) {
+        const restaurantName = faker.company.name();
+        const latitude = parseFloat(faker.location.latitude());
+        const longitude = parseFloat(faker.location.longitude());
+
+        // Генерация изображений для ресторана
+        const imagePaths = generateRestaurantImages(restaurantName, i, testingDir);
+        // Для записи в БД используем путь к основному изображению
+        const mainImageUrl = `/uploads/testing/restaurant_${i}_main.jpg`;
+
+        const restaurantRecord = await prisma.restaurant.create({
+            data: {
+                name: restaurantName,
+                latitude,
+                longitude,
+                imageUrl: mainImageUrl,
+            },
+        });
+        restaurants.push(restaurantRecord);
+    }
+
+    console.log("🍽️ Генерация блюд для ресторанов...");
     const dishes = [];
     const possibleIngredients = [
         "tomato",
@@ -111,32 +134,33 @@ async function main() {
         "thyme",
     ];
 
-    for (let i = 0; i < 10; i++) {
-        const ingredientCount = faker.number.int({ min: 3, max: 5 });
-        const shuffled = faker.helpers.shuffle(possibleIngredients);
-        const selectedIngredients = shuffled.slice(0, ingredientCount);
-        const description = `A delightful dish featuring ${selectedIngredients.join(", ")}.`;
+    // Для каждого ресторана генерируем 10 блюд
+    for (const restaurant of restaurants) {
+        for (let i = 0; i < 10; i++) {
+            const ingredientCount = faker.number.int({ min: 3, max: 5 });
+            const shuffled = faker.helpers.shuffle(possibleIngredients);
+            const selectedIngredients = shuffled.slice(0, ingredientCount);
+            const description = `A delightful dish featuring ${selectedIngredients.join(", ")}.`;
 
-        const dish = await prisma.dish.create({
-            data: {
-                name: faker.commerce.productName(),
-                description,
-                ingredients: JSON.stringify(selectedIngredients),
-                price: faker.number.int({ min: 5000, max: 50000 }),
-                imageUrl: `/uploads/seeded/dish_(${i + 1}).jpg`,
-                category: faker.commerce.department(),
-                restaurantId: restaurant.id,
-            },
-        });
-        dishes.push(dish);
+            const dish = await prisma.dish.create({
+                data: {
+                    name: faker.commerce.productName(),
+                    description,
+                    ingredients: JSON.stringify(selectedIngredients),
+                    price: faker.number.int({ min: 5000, max: 50000 }),
+                    imageUrl: `/uploads/seeded/dish_(${i + 1}).jpg`,
+                    category: faker.commerce.department(),
+                    restaurantId: restaurant.id,
+                },
+            });
+            dishes.push(dish);
+        }
     }
 
     console.log("🛒 Заполнение корзин пользователей (только для CUSTOMER)...");
     for (const customer of customers) {
         const cart = await prisma.cart.create({
-            data: {
-                userId: customer.id,
-            },
+            data: { userId: customer.id },
         });
 
         const selectedDishes = new Set();
