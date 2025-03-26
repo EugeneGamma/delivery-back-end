@@ -20,7 +20,6 @@ function getRandomCoordinates() {
     return [latitude, longitude];
 }
 
-
 async function main() {
     console.log("🧹 Очищаем базу...");
     await prisma.cartItem.deleteMany();
@@ -99,46 +98,49 @@ async function main() {
         fs.mkdirSync(testingDir, { recursive: true });
     }
 
-    console.log("🏠 Генерация ресторанов и изображений...");
+    console.log("🏠 Генерация ресторанов...");
     const restaurants = [];
-    // Генерируем 5 ресторанов
+
     for (let i = 1; i <= 5; i++) {
         const restaurantName = faker.company.name();
         const [latitude, longitude] = getRandomCoordinates();
-        // const latitude = getRandomCoordinates()[0];
-        // const longitude = getRandomCoordinates()[1];
 
-        // Генерация изображений для ресторана
-        const imagePaths = generateRestaurantImages(restaurantName, i, testingDir);
-        // Для записи в БД используем путь к основному изображению
-        const mainImageUrl = `/uploads/testing/restaurant_${i}_main.jpg`;
+        // ✅ Используем исправленную `generateRestaurantImages()`
+        const { bannerPath, mainPath, thumbPath } = generateRestaurantImages(restaurantName, i, testingDir);
 
         const restaurantRecord = await prisma.restaurant.create({
             data: {
                 name: restaurantName,
                 latitude,
                 longitude,
-                imageUrl: mainImageUrl,
+                description: faker.company.catchPhrase(),
+                imageUrl: `/uploads/testing/restaurant_${i}_main.jpg`,
+                thumbnailUrl: `/uploads/testing/restaurant_${i}_thumbnail.jpg`,
+                topImageUrl: `/uploads/testing/restaurant_${i}_banner.jpg`,
             },
         });
 
-        // Формируем данные для записи в файл
         const restaurantData = {
             name: restaurantName,
             latitude,
             longitude,
-            imageUrl: mainImageUrl,
+            description: restaurantRecord.description,
+            imageUrl: `/uploads/testing/restaurant_${i}_main.jpg`,
+            thumbnailUrl: `/uploads/testing/restaurant_${i}_thumbnail.jpg`,
+            topImageUrl: `/uploads/testing/restaurant_${i}_banner.jpg`,
             mapUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
         };
 
         restaurants.push(restaurantData);
     }
+
     console.log("💾 Сохранение ресторанов в restaurants.json...");
     fs.writeFileSync("restaurants.json", JSON.stringify(restaurants, null, 2));
     console.log("✅ Рестораны успешно сохранены!");
+
+
+
     console.log("🍽️ Генерация блюд для ресторанов...");
-
-
     const dishes = [];
     const possibleIngredients = [
         "tomato",
