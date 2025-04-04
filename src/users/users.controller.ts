@@ -4,12 +4,16 @@ import {
     Post,
     Body,
     UseGuards,
-    Request
+    Request,
+    Patch,
+
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateLocationDto } from './dto/update-location.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {GetUser} from "../auth/decorators/user.decorator";
 
 @ApiTags("users")
 @Controller('users')
@@ -37,5 +41,15 @@ export class UsersController {
     @UseGuards() // ДЛЯ ЭТОГО ЭНПОЛИНТА НЕТ JWT
     create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto);
+    }
+    @Patch('me/location')
+    @ApiOperation({ summary: 'Обновление домашнего адреса и координат' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'Адрес и координаты обновлены' })
+    updateLocation(
+        @GetUser('id') userId: number,
+        @Body() updateLocationDto: UpdateLocationDto
+    ) {
+        return this.usersService.updateLocation(userId, updateLocationDto);
     }
 }

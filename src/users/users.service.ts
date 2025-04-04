@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import {UpdateLocationDto} from "./dto/update-location.dto";
 
 @Injectable()
 export class UsersService {
@@ -32,4 +33,16 @@ export class UsersService {
             where: { email },
         });
     }
+    // users.service.ts
+    async updateLocation(userId: number, dto: UpdateLocationDto) {
+        return this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                address: dto.address,
+                latitude: dto.latitude,
+                longitude: dto.longitude,
+            },
+        });
+    }
+
 }

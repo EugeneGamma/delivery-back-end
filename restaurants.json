@@ -1,37 +1,52 @@
 [
   {
-    "name": "Schaden - Kunde",
-    "latitude": 40.83744840064993,
-    "longitude": 69.58820021378118,
+    "name": "Kilback - Swift",
+    "latitude": 40.831369321511666,
+    "longitude": 69.59056256657024,
+    "description": "Realigned contextually-based approach",
     "imageUrl": "/uploads/testing/restaurant_1_main.jpg",
-    "mapUrl": "https://www.google.com/maps?q=40.83744840064993,69.58820021378118"
+    "thumbnailUrl": "/uploads/testing/restaurant_1_thumbnail.jpg",
+    "topImageUrl": "/uploads/testing/restaurant_1_banner.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.831369321511666,69.59056256657024"
   },
   {
-    "name": "Kuvalis, Dach and Gottlieb",
-    "latitude": 40.837535095658104,
-    "longitude": 69.60536462601557,
+    "name": "Lindgren, Hirthe and Hane",
+    "latitude": 40.84546701818239,
+    "longitude": 69.61244740693162,
+    "description": "Adaptive client-driven matrices",
     "imageUrl": "/uploads/testing/restaurant_2_main.jpg",
-    "mapUrl": "https://www.google.com/maps?q=40.837535095658104,69.60536462601557"
+    "thumbnailUrl": "/uploads/testing/restaurant_2_thumbnail.jpg",
+    "topImageUrl": "/uploads/testing/restaurant_2_banner.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.84546701818239,69.61244740693162"
   },
   {
-    "name": "Greenholt, Veum and Stehr",
-    "latitude": 40.846542859038415,
-    "longitude": 69.61338591421212,
+    "name": "Pfeffer Inc",
+    "latitude": 40.84801934494206,
+    "longitude": 69.59243153703912,
+    "description": "Total responsive instruction set",
     "imageUrl": "/uploads/testing/restaurant_3_main.jpg",
-    "mapUrl": "https://www.google.com/maps?q=40.846542859038415,69.61338591421212"
+    "thumbnailUrl": "/uploads/testing/restaurant_3_thumbnail.jpg",
+    "topImageUrl": "/uploads/testing/restaurant_3_banner.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.84801934494206,69.59243153703912"
   },
   {
-    "name": "Konopelski - Stoltenberg",
-    "latitude": 40.83070493373173,
-    "longitude": 69.60847752737159,
+    "name": "MacGyver - McLaughlin",
+    "latitude": 40.836864818912076,
+    "longitude": 69.58455739317469,
+    "description": "Triple-buffered zero trust local area network",
     "imageUrl": "/uploads/testing/restaurant_4_main.jpg",
-    "mapUrl": "https://www.google.com/maps?q=40.83070493373173,69.60847752737159"
+    "thumbnailUrl": "/uploads/testing/restaurant_4_thumbnail.jpg",
+    "topImageUrl": "/uploads/testing/restaurant_4_banner.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.836864818912076,69.58455739317469"
   },
   {
-    "name": "Roob, Pfannerstill and Pollich",
-    "latitude": 40.8341730203523,
-    "longitude": 69.5891078223248,
+    "name": "O'Keefe - Goldner",
+    "latitude": 40.84503530363835,
+    "longitude": 69.58407779422045,
+    "description": "Future-proofed context-sensitive definition",
     "imageUrl": "/uploads/testing/restaurant_5_main.jpg",
-    "mapUrl": "https://www.google.com/maps?q=40.8341730203523,69.5891078223248"
+    "thumbnailUrl": "/uploads/testing/restaurant_5_thumbnail.jpg",
+    "topImageUrl": "/uploads/testing/restaurant_5_banner.jpg",
+    "mapUrl": "https://www.google.com/maps?q=40.84503530363835,69.58407779422045"
   }
 ]
